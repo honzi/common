@@ -1348,6 +1348,15 @@ function webgl_entity_normals(entity){
     ];
 }
 
+function webgl_entity_remove(id){
+    const entity = entity_entities[id];
+
+    webgl_entity_unload(entity);
+    entity_remove({
+      'entities': [id],
+    });
+}
+
 function webgl_entity_unload(entity){
     for(const buffer in entity.buffers){
         webgl.deleteBuffer(entity.buffers[buffer]);
@@ -3024,11 +3033,9 @@ function webgl_prefab_remake({
   prefab,
   prefix,
 } = {}){
-    for(const entity in entity_entities){
-        if(entity_entities[entity].id.startsWith(prefix)){
-            entity_remove({
-              'entities': [entity.id],
-            });
+    for(const id in entity_entities){
+        if(id.startsWith(prefix)){
+            webgl_entity_remove(id);
         }
     }
 
