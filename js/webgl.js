@@ -2324,28 +2324,36 @@ function webgl_logic_entity(entity){
         const event_position = webgl_get_position(entity);
 
         if(core_type(entity.event_range) === 'array'){
-            for(const character in webgl_characters){
-                if(character === entity.attach_to){
+            const event_x = event_position.x + entity.event_range[0];
+            const event_y = event_position.y + entity.event_range[1];
+            const event_z = event_position.z + entity.event_range[2];
+            const range_x = entity.event_range[3] - entity.event_range[0];
+            const range_y = entity.event_range[4] - entity.event_range[1];
+            const range_z = entity.event_range[5] - entity.event_range[2];
+
+            for(const id in webgl_characters){
+                if(id === entity.attach_to){
                     continue;
                 }
+                const character = webgl_characters[id];
 
                 if(math_cuboid_overlap({
-                    'depth0': entity.event_range[2],
-                    'depth1': entity.event_range[2],
-                    'height0': entity.event_range[1],
-                    'height1': entity.event_range[1],
-                    'width0': entity.event_range[0],
-                    'width1': entity.event_range[0],
-                    'x0': webgl_characters[character].position_x,
-                    'y0': webgl_characters[character].position_y,
-                    'z0': webgl_characters[character].position_z,
-                    'x1': event_position.x,
-                    'y1': event_position.y,
-                    'z1': event_position.z,
+                    'depth0': character.collide_xz,
+                    'depth1': range_x,
+                    'height0': character.collide_bottom + character.collide_top,
+                    'height1': range_y,
+                    'width0': character.collide_xz,
+                    'width1': range_z,
+                    'x0': character.position_x,
+                    'x1': event_x,
+                    'y0': character.position_y - character.collide_bottom,
+                    'y1': event_y,
+                    'z0': character.position_z,
+                    'z1': event_z,
                   })){
                     webgl_event({
                       'parent': entity,
-                      'target': webgl_characters[character],
+                      'target': character,
                     });
                     if(!entity_entities[entity.id]){
                         return;
@@ -2354,22 +2362,23 @@ function webgl_logic_entity(entity){
             }
 
         }else{
-            for(const character in webgl_characters){
-                if(character === entity.attach_to){
+            for(const id in webgl_characters){
+                if(id === entity.attach_to){
                     continue;
                 }
+                const character = webgl_characters[id];
 
                 if(math_distance({
-                    'x0': webgl_characters[character].position_x,
-                    'y0': webgl_characters[character].position_y,
-                    'z0': webgl_characters[character].position_z,
+                    'x0': character.position_x,
+                    'y0': character.position_y,
+                    'z0': character.position_z,
                     'x1': event_position.x,
                     'y1': event_position.y,
                     'z1': event_position.z,
                   }) < entity.event_range){
                     webgl_event({
                       'parent': entity,
-                      'target': webgl_characters[character],
+                      'target': character,
                     });
                     if(!entity_entities[entity.id]){
                         return;
