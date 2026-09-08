@@ -2037,7 +2037,7 @@ function webgl_logic(){
         webgl_logic_entity(entity_entities[entity]);
     }
 
-    for(const id in webgl_characters){
+    loop:for(const id in webgl_characters){
         const character = webgl_characters[id];
         const level = webgl_character_level(character);
         if(webgl_properties.paused
@@ -2172,6 +2172,17 @@ function webgl_logic(){
                     if(change){
                         change_position_x = change.x;
                         change_position_z = change.z;
+
+                        if(character.controls === 'projectile'){
+                            entity_group_modify({
+                              'groups': ['webgl_characters_' + id],
+                              'todo': function(entity){
+                                  webgl_entity_remove(entity.id);
+                              },
+                            });
+                            delete webgl_characters[id];
+                            continue loop;
+                        }
                     }
                 }
             }
@@ -3633,6 +3644,7 @@ function webgl_primitive_projectile(args){
       'camera_rotate_y': character.camera_rotate_y,
       'camera_rotate_z': character.camera_rotate_z,
       'collides': true,
+      'controls': 'projectile',
       'gravity': 0,
       'id': args.prefix,
       'level': 0,
