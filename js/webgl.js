@@ -3621,7 +3621,7 @@ function webgl_primitive_projectile(args){
       'object': args,
       'defaults': {
         'groups': [],
-        'prefix': entity_id_count,
+        'prefix': '_projectile_' + entity_id_count,
         'speed': 1,
       },
     });
