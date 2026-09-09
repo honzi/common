@@ -363,6 +363,16 @@ function webgl_character_move({
     webgl_characters[id].change_position_z += movement.z;
 }
 
+function webgl_character_remove(id){
+    entity_group_modify({
+      'groups': ['webgl_characters_' + id],
+      'todo': function(entity){
+          webgl_entity_remove(entity.id);
+      },
+    });
+    delete webgl_characters[id];
+}
+
 function webgl_character_spawn(id){
     if(core_type(id) !== 'string'){
         id = webgl_player_id;
@@ -2174,13 +2184,7 @@ function webgl_logic(){
                         change_position_z = change.z;
 
                         if(character.controls === 'projectile'){
-                            entity_group_modify({
-                              'groups': ['webgl_characters_' + id],
-                              'todo': function(entity){
-                                  webgl_entity_remove(entity.id);
-                              },
-                            });
-                            delete webgl_characters[id];
+                            webgl_character_remove(id);
                             continue loop;
                         }
                     }
