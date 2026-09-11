@@ -48,16 +48,16 @@ function core_escape(force){
 }
 
 function core_events_bind({
-  beforeunload = false,
   blur = false,
   clearkeys = false,
   elements = false,
   keybinds = false,
   pointerbinds = false,
+  visibilitychange = false,
 } = {}){
-    if(beforeunload !== false){
-        core_events.beforeunload = beforeunload;
-        globalThis.addEventListener('beforeunload', core_handle_beforeunload);
+    if(visibilitychange !== false){
+        core_events.visibilitychange = visibilitychange;
+        globalThis.addEventListener('visibilitychange', core_handle_visibilitychange);
     }
     if(blur !== false){
         core_events.blur = blur;
@@ -152,10 +152,6 @@ function core_getelement(id){
 
 function core_getpointerlock(){
     return document.pointerLockElement !== null;
-}
-
-function core_handle_beforeunload(event){
-    core_events.beforeunload?.(event);
 }
 
 function core_handle_blur(event){
@@ -351,6 +347,10 @@ function core_handle_touch(event){
     }
 
     core_handle_prevent(event);
+}
+
+function core_handle_visibilitychange(event){
+    core_events.visibilitychange(event);
 }
 
 function core_handle_wheel(event){
@@ -767,7 +767,6 @@ function core_replace({
 }
 
 function core_repo_init({
-  beforeunload = false,
   blur = false,
   events = {},
   globals = {},
@@ -787,6 +786,7 @@ function core_repo_init({
   title,
   ui = '',
   ui_elements = [],
+  visibilitychange = false,
 } = {}){
     Object.assign(
       globalThis,
@@ -920,10 +920,10 @@ function core_repo_init({
     core_menu_block_events = menu_block_events;
     core_menu_lock = menu_lock;
     core_events_bind({
-      'beforeunload': beforeunload,
       'blur': blur,
       'elements': events,
       'pointerbinds': pointerbinds,
+      'visibilitychange': visibilitychange,
     });
 
     for(const id of ui_elements){
