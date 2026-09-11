@@ -1410,6 +1410,7 @@ function webgl_event({
             webgl_event_replace(
               modify,
               {
+                '_character': parent.attach_to || parent.id,
                 '_self': parent.id,
                 '_target': target.id,
               }
