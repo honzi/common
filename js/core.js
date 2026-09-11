@@ -53,12 +53,7 @@ function core_events_bind({
   elements = false,
   keybinds = false,
   pointerbinds = false,
-  visibilitychange = false,
 } = {}){
-    if(visibilitychange !== false){
-        core_events.visibilitychange = visibilitychange;
-        globalThis.addEventListener('visibilitychange', core_handle_visibilitychange);
-    }
     if(blur !== false){
         core_events.blur = blur;
     }
@@ -347,10 +342,6 @@ function core_handle_touch(event){
     }
 
     core_handle_prevent(event);
-}
-
-function core_handle_visibilitychange(event){
-    core_events.visibilitychange(event);
 }
 
 function core_handle_wheel(event){
@@ -786,7 +777,6 @@ function core_repo_init({
   title,
   ui = '',
   ui_elements = [],
-  visibilitychange = false,
 } = {}){
     Object.assign(
       globalThis,
@@ -923,7 +913,6 @@ function core_repo_init({
       'blur': blur,
       'elements': events,
       'pointerbinds': pointerbinds,
-      'visibilitychange': visibilitychange,
     });
 
     for(const id of ui_elements){
